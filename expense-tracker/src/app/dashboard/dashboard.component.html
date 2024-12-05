@@ -2,9 +2,9 @@
   <h2>Dashboard</h2>
   <div class="mb-4">
     <p>
-      Budget: <strong>{{ budget }} MAD</strong> |
-      Total Expenses: <strong>{{ totalExpenses }} MAD</strong> |
-      Remaining: <strong>{{ budget - totalExpenses }} MAD</strong>
+      Budget: <strong>{{ budget | currency:'MAD' }}</strong> |
+      Total Expenses: <strong>{{ totalExpenses | currency:'MAD' }}</strong> |
+      Remaining: <strong>{{ (budget - totalExpenses) | currency:'MAD' }}</strong>
     </p>
     <div class="progress">
       <div
@@ -19,8 +19,8 @@
         {{ ((totalExpenses / budget) * 100) | number:'1.0-0' }}%
       </div>
     </div>
-
   </div>
+
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -29,20 +29,30 @@
         <th>Amount</th>
         <th>Category</th>
         <th>Date</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let expense of expenses; let i = index">
         <td>{{ i + 1 }}</td>
         <td>{{ expense.name }}</td>
-        <td>{{ expense.amount }}</td>
+        <td>{{ expense.amount | currency:'MAD' }}</td>
         <td>{{ expense.category }}</td>
-        <td>{{ expense.date }}</td>
+        <td>{{ expense.date | date:'mediumDate' }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="deleteExpense(expense.id)">
+            Delete
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="expenses.length === 0">
+        <td colspan="6" class="text-center">No expenses to display.</td>
       </tr>
     </tbody>
   </table>
 </div>
-<div *ngIf="overBudget" class="alert alert-danger" role="alert">
-  <strong>Warning!</strong> You have exceeded your budget by {{ totalExpenses - budget }} MAD.
-</div>
 
+<div *ngIf="overBudget" class="alert alert-danger mt-3" role="alert">
+  <strong>Warning!</strong> You have exceeded your budget by
+  {{ (totalExpenses - budget) | currency:'MAD' }}.
+</div>

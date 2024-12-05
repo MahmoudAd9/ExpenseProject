@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(5257); // Port HTTP
-    options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps()); // Port HTTPS
+    // options.ListenAnyIP(5001, listenOptions => listenOptions.UseHttps()); // Port HTTPS
 });
 
 // Ajouter le DbContext avec MySQL via la chaîne de connexion
@@ -24,6 +24,17 @@ builder.Services.AddSwaggerGen();
 // Ajouter les services de contrôleurs
 builder.Services.AddControllers();
 
+// Configurer CORS pour autoriser les requêtes venant de votre frontend Angular
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", policy =>
+    {
+        policy.AllowAnyOrigin() // Autorise toutes les origines
+              .AllowAnyMethod() // Autorise toutes les méthodes HTTP (GET, POST, etc.)
+              .AllowAnyHeader(); // Autorise tous les en-têtes
+    });
+});
+
 var app = builder.Build();
 
 // Configurez Swagger uniquement pour l'environnement de développement
@@ -32,6 +43,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Activez CORS avant toute requête entrante
+app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 

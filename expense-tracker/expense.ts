@@ -1,6 +1,7 @@
 export interface Expense {
+  id: number;
   name: string;
   amount: number;
   category: string;
-  date: string; // Utilisez `Date` si vous préférez gérer les objets Date
+  date: Date; // Use Date instead of string
 }

@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <h2>Dashboard</h2>
+  <div class="mb-4">
+    <p>
+      Budget: <strong>{{ budget }} MAD</strong> |
+      Total Expenses: <strong>{{ totalExpenses }} MAD</strong> |
+      Remaining: <strong>{{ budget - totalExpenses }} MAD</strong>
+    </p>
+    <div class="progress">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        [style.width.%]="(totalExpenses / budget) * 100"
+        [class.bg-danger]="totalExpenses > budget"
+        [attr.aria-valuenow]="totalExpenses"
+        [attr.aria-valuemin]="0"
+        [attr.aria-valuemax]="budget"
+      >
+        {{ ((totalExpenses / budget) * 100) | number:'1.0-0' }}%
+      </div>
+    </div>
+
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of expenses; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ expense.name }}</td>
+        <td>{{ expense.amount }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.date }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="overBudget" class="alert alert-danger" role="alert">
+  <strong>Warning!</strong> You have exceeded your budget by {{ totalExpenses - budget }} MAD.
+</div>
+
